@@ -25,7 +25,7 @@ module ShopifyApp
         redirect_to return_address
       else
         flash[:error] = "Could not log in to Shopify store."
-        redirect_to login_url
+        redirect_to login_url(:protocol => 'https')
       end
     end
 
@@ -33,21 +33,21 @@ module ShopifyApp
       session[:shopify] = nil
       session[:shopify_domain] = nil
       flash[:notice] = "Successfully logged out."
-      redirect_to login_url
+      redirect_to login_url(:protocol => 'https')
     end
 
     protected
 
     def authenticate
       if shop_name = sanitize_shop_param(params)
-        fullpage_redirect_to "#{main_app.root_path}auth/shopify?shop=#{shop_name}"
+        fullpage_redirect_to "#{main_app.root_url(:protocol => 'https')}auth/shopify?shop=#{shop_name}"
       else
         redirect_to return_address
       end
     end
 
     def return_address
-      session.delete(:return_to) || main_app.root_url
+      session.delete(:return_to) || main_app.root_url(:protocol => 'https')
     end
 
     def sanitized_shop_name
